@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from math import pow, acos, pi, sqrt
 
-class Photoshop():
+class PointProcessing():
     # def __init__():
 
     #Negative Transformation

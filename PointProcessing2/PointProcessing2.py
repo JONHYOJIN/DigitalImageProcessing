@@ -1,12 +1,12 @@
 # Point Processing 2
 from ImageRoad import GetImage
-from ImageProcessing import Photoshop
+from ImageProcessing import PointProcessing
 
 import cv2
 import numpy as np
 
 ImageGetter = GetImage()
-Ptshop = Photoshop()
+Ptshop = PointProcessing()
 
 # Fig1 = ImageGetter.get_gray_image("Fig0316(1)(top_left)")
 # Fig1_hist = Ptshop.histogram_equalization(Fig1)
