@@ -11,3 +11,5 @@
 - Histogram Equalization(for Gray-Scale Images)
 - Mean Filter(3x3, 5x5)
 - Median Filter(3x3, 5x5)
+
+![Uploading 스크린샷 2022-04-02 오후 5.14.49.png…]()
