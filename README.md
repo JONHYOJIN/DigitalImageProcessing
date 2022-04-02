@@ -7,6 +7,7 @@
 
 ## Processing
 - Negative Transformation
-- Power-law Transformation
-- Histogram Equalization
-
+- Power-law Transformation(γ= 0.4, 0.67, 1.5, 2.5)
+- Histogram Equalization(for Gray-Scale Images)
+- Mean Filter(3x3, 5x5)
+- Median Filter(3x3, 5x5)
