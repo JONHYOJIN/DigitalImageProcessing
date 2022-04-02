@@ -12,4 +12,4 @@
 - Mean Filter(3x3, 5x5)
 - Median Filter(3x3, 5x5)
 
-![Uploading 스크린샷 2022-04-02 오후 5.14.49.png…]()
+<img width="1399" alt="스크린샷 2022-04-02 오후 5 14 49" src="https://user-images.githubusercontent.com/82302700/161374078-4089c9da-359d-44d4-8955-fcbaf23c237d.png">
