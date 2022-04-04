@@ -1,46 +1,58 @@
 import cv2
 import pandas as pd
 import numpy as np
-from math import pow, acos, pi, sqrt
 
 class PointProcessing():
     # def __init__():
 
     #Negative Transformation
-    def negative_transformation(self, image):
+    def negative_transformation(self, image, color_type=None):
         if(len(image.shape)==2):
             width, height = image.shape[0], image.shape[1]
-            max = np.max(image)
-            result = np.ones((width, height))
-            result = result*max
+            result = np.ones((width, height))*np.max(image)
             result = result-image
-        elif(len(image.shape)==3):
+        elif(len(image.shape)==3 and color_type=="rgb"):
             width, height, channel = image.shape[0], image.shape[1], image.shape[2]
-            max0 = np.max(image[0])
-            max1 = np.max(image[1])
-            max2 = np.max(image[2])
             result = np.ones((width, height, channel))
-            result[0] = result[0]*max0
-            result[1] = result[1]*max1
-            result[2] = result[2]*max2
+            for i in range(3):
+                result[i] = result[i]*np.max(image[i])
             result = result-image
+        elif(len(image.shape)==3 and color_type=="hsi"):
+            width, height, channel = image.shape[0], image.shape[1], image.shape[2]
+            result = np.ones((width, height, channel))
+            for i in range(1, 3):
+                result[i] = result[i]*np.max(image[i])
+            result = result-image
+            result[0] = image[0]
         return np.array(result, dtype='uint8')
     
     #Power Law Transformation
-    def power_law_transformation(self, image, gamma):
-        result = np.array(255*(image/255)**gamma, dtype='uint8')
+    def power_law_transformation(self, image, gamma, color_type=None):
+        if(color_type=="gray" or color_type=="rgb"):
+            result = np.array(255*(image/255)**gamma, dtype='uint8')
+        elif(color_type=="hsi"):
+            result = image
+            # result[:,:,0] = np.array(255*(image[:,:,0]/255)**gamma)
+            result[:,:,1] = np.array(255*(image[:,:,1]/255)**gamma)
+            result[:,:,2] = np.array(255*(image[:,:,2]/255)**gamma)
+            result = np.array(result, dtype='uint8')
         return result
 
     #Histogram Equalization using openCV
-    def histogram_equalization_cv(self, image):
+    def histogram_equalization_cv(self, image, color_type=None):
         result = cv2.equalizeHist(image)
         return result
 
     #Histogram Equalization
-    def histogram_equalization(self, image):
-        width, height = image.shape[0], image.shape[1]
-        max = np.max(image) + 1
-        min = np.min(image)
+    def histogram_equalization(self, image, color_type=None):
+        if(color_type=="gray"):
+            channel = image
+        elif(color_type=="hsi"):
+            channel = image[:,:,2]
+
+        width, height = channel.shape[0], channel.shape[1]
+        max = np.max(channel) + 1
+        min = np.min(channel)
         num_pixel = width*height
 
         #scale histogram
@@ -54,7 +66,7 @@ class PointProcessing():
         sum = 0
         for i in range(width):
             for j in range(height):
-                hist[image[i][j]] += 1
+                hist[channel[i][j]] += 1
         min = sum_hist[min]
         for i in range(max):
             sum+=hist[i]
@@ -62,8 +74,14 @@ class PointProcessing():
             norm_hist[i] = np.around((max-1)*(sum_hist[i]-min)/(num_pixel-min))
         for i in range(width):
             for j in range(height):
-                result[i][j] = norm_hist[image[i][j]]
-        return np.array(result, dtype='uint8')
+                result[i][j] = norm_hist[channel[i][j]]
+        if(color_type=="gray"):
+            return np.array(result, dtype='uint8')
+        elif(color_type=="hsi"):
+            result_hsi = image
+            result_hsi[:,:,2] = result
+            return result_hsi
+
         
 class AreaProcessing():
     # def __init__():

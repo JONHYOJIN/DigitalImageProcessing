@@ -8,21 +8,28 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from tkinter import *
-from PIL import ImageTk
 
 class GetImage():
     # def __init__(self):
 
     #Read Gray-Scale Image
     def get_gray_image(self, filename):
-        address = "/Users/hyojin/DigitalImageProcessing/실습영상/" + filename
+        # address = "/Users/hyojin/DigitalImageProcessing/실습영상/" + filename
+        address = "./실습영상/" + filename
         image = cv2.imread(address, cv2.IMREAD_GRAYSCALE)
         return image
     #Read BGR(RGB) Image
-    def get_color_image(self, filename):
-        address = "/Users/hyojin/DigitalImageProcessing/실습영상/" + filename
+    def get_color_image_rgb(self, filename):
+        # address = "/Users/hyojin/DigitalImageProcessing/실습영상/" + filename
+        address = "./실습영상/" + filename
         image = cv2.imread(address, cv2.IMREAD_COLOR)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        return image
+    def get_color_image_hsi(self, filename):
+        # address = "/Users/hyojin/DigitalImageProcessing/실습영상/" + filename
+        address = "./실습영상/" + filename
+        image = cv2.imread(address, cv2.IMREAD_COLOR)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         return image
     #Show the imaage(Only one at onece)
     def show_image(self, image):

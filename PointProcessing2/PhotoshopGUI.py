@@ -22,52 +22,57 @@ root.resizable(True, True)
 
 ### Funtions ###
 def get_selected_image(scale):
-    global IMAGE, IMAGE_CV, NAME
+    global IMAGE, IMAGE_CV, NAME, TYPE
     NAME = combobox_p1_var.get()
     label1.config(text="\n[ "+NAME+" ] 이미지\n")
     label1.place(x=350, y=5)
     if scale=="gray":
         IMAGE_CV = GetImage().get_gray_image(NAME)
-    elif scale=="color":
-        IMAGE_CV = GetImage().get_color_image(NAME)
+        TYPE = "gray"
+    elif scale=="rgb":
+        IMAGE_CV = GetImage().get_color_image_rgb(NAME)
+        TYPE = "rgb"
+    elif scale=="hsi":
+        IMAGE_CV = GetImage().get_color_image_rgb(NAME)
+        TYPE = "hsi"
     IMAGE = Image.fromarray(IMAGE_CV)
     IMAGE = ImageTk.PhotoImage(image=IMAGE)
     label2.config(image=IMAGE)
 def neg_trans():
-    global IMAGE, IMAGE_CV, NAME
+    global IMAGE, IMAGE_CV, NAME, TYPE
     try:
         label1.config(text="\n[ "+NAME+" ] Negative Transformation\n")
         label1.place(x=350, y=5)
-        IMAGE_CV = PointProcessing().negative_transformation(IMAGE_CV)
+        IMAGE_CV = PointProcessing().negative_transformation(IMAGE_CV, TYPE)
         IMAGE = Image.fromarray(IMAGE_CV)
         IMAGE = ImageTk.PhotoImage(image=IMAGE)
         label2.config(image=IMAGE)
     except:
         label1.config(text="\n선택된 사진이 없습니다")
 def pow_law_trans(gamma):
-    global IMAGE, IMAGE_CV, NAME
+    global IMAGE, IMAGE_CV, NAME, TYPE
     try:
         label1.config(text="\n[ "+NAME+" ] Power-Law Transformation γ="+str(gamma)+"\n")
         label1.place(x=350, y=5)
-        IMAGE_CV = PointProcessing().power_law_transformation(IMAGE_CV, gamma)
+        IMAGE_CV = PointProcessing().power_law_transformation(IMAGE_CV, gamma, TYPE)
         IMAGE = Image.fromarray(IMAGE_CV)
         IMAGE = ImageTk.PhotoImage(image=IMAGE)
         label2.config(image=IMAGE)
     except:
         label1.config(text="\n선택된 사진이 없습니다")
 def hist_equal():
-    global IMAGE, IMAGE_CV, NAME
+    global IMAGE, IMAGE_CV, NAME, TYPE
     try:
         label1.config(text="\n[ "+NAME+" ] Histogram Equalization\n")
         label1.place(x=350, y=5)
-        IMAGE_CV = PointProcessing().histogram_equalization(IMAGE_CV)
+        IMAGE_CV = PointProcessing().histogram_equalization(IMAGE_CV, TYPE)
         IMAGE = Image.fromarray(IMAGE_CV)
         IMAGE = ImageTk.PhotoImage(image=IMAGE)
         label2.config(image=IMAGE)
     except:
         label1.config(text="\n선택된 사진이 없습니다")
         if(NAME):
-            label1.config(text="\nColor 사진은 지원되지 않습니다")
+            label1.config(text="\nRGB 사진은 지원되지 않습니다")
 def mean_ft(size):
     global IMAGE, IMAGE_CV, NAME
     try:
@@ -109,8 +114,10 @@ combobox_p1.place(x=10, y=25)
 
 button_select_image_gray = Button(root, text = "흑백 선택", command=partial(get_selected_image, "gray"))
 button_select_image_gray.place(x=220, y=20)
-button_select_image_color = Button(root, text = "컬러 선택", command=partial(get_selected_image, "color"))
-button_select_image_color.place(x=220, y=45)
+button_select_image_rgb = Button(root, text = "RGB 선택", command=partial(get_selected_image, "rgb"))
+button_select_image_rgb.place(x=220, y=45)
+button_select_image_hsi = Button(root, text = "HSI 선택", command=partial(get_selected_image, "hsi"))
+button_select_image_hsi.place(x=220, y=70)
 
 #Image Processing
 label4 = Label(root, text = "< Processing >")
