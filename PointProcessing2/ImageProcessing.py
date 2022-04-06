@@ -19,11 +19,12 @@ class PointProcessing():
             result = result-image
         elif(len(image.shape)==3 and color_type=="HSI"):
             width, height, channel = image.shape[0], image.shape[1], image.shape[2]
+            result = image.copy()
             result = np.ones((width, height, channel))
             for i in range(1, 3):
-                result[i] = result[i]*np.max(image[i])
+                result[:,:,i] = result[:,:,i]*np.max(image[i])
             result = result-image
-            result[0] = image[0]
+            result[:,:,0] = image[:,:,0]
         return np.array(result, dtype='uint8')
     
     #Power Law Transformation
@@ -34,8 +35,8 @@ class PointProcessing():
             result = np.array(image, dtype='uint8')
             # result[:,:,0] = np.array(255*(image[:,:,0]/255)**gamma)
             result[:,:,1] = np.array(255*(image[:,:,1]/255)**gamma)
-            result[:,:,2] = np.array(255*(image[:,:,2]/255)**gamma)
-            # result = cv2.cvtColor(result, cv2.COLOR_HSV2RGB)
+            result[:,:,2] = np.array(255*(image[:,:,2]/255)**gamma, dtype='uint8')
+            result = cv2.cvtColor(result, cv2.COLOR_HSV2RGB)
         return result
 
     #Histogram Equalization using openCV
@@ -80,7 +81,7 @@ class PointProcessing():
         elif(color_type=="HSI"):
             result_hsi = image
             result_hsi[:,:,2] = result
-            # result_hsi = cv2.cvtColor(result_hsi, cv2.COLOR_HSV2RGB)
+            result_hsi = cv2.cvtColor(result_hsi, cv2.COLOR_HSV2RGB)
             return result_hsi
 
         
@@ -96,21 +97,21 @@ class AreaProcessing():
             result = np.zeros((width-2*radius, height-2*radius))
             for i in range(width-2*radius):
                 for j in range(height-2*radius):
-                    result[i,j] += np.sum(image[i:i+size,j:j+size])/total_size
+                    result[i,j] = np.sum(image[i:i+size,j:j+size])/total_size
         elif(len(image.shape)==3 and color_type=="RGB"):
             width, height, channel = image.shape[0], image.shape[1], image.shape[2]
             result = np.zeros((width-2*radius, height-2*radius, channel))
             for ch in range(channel):
                 for i in range(width-2*radius):
                     for j in range(height-2*radius):
-                        result[i,j,ch] += np.sum(image[i:i+size,j:j+size,ch])/total_size
+                        result[i,j,ch] = np.sum(image[i:i+size,j:j+size,ch])/total_size
         elif(len(image.shape)==3 and color_type=="HSI"):
             width, height = image.shape[0], image.shape[1]
             result = image[radius:width-radius+1, radius:height-radius+1, :]
             for i in range(width-2*radius):
                 for j in range(height-2*radius):
-                    result[i,j,2] += np.sum(image[i:i+size,j:j+size,2])/total_size
-            # result = cv2.cvtColor(result, cv2.COLOR_HSV2RGB)
+                    result[i,j,2] = np.sum(image[i:i+size,j:j+size,2])/total_size
+            result = cv2.cvtColor(result, cv2.COLOR_HSV2RGB)
         return np.array(result, dtype='uint8')
 
     #Median Filter
@@ -135,7 +136,7 @@ class AreaProcessing():
             for i in range(width-2*radius):
                 for j in range(height-2*radius):
                     result[i,j,2] = np.median(image[i:i+size,j:j+size,2])
-            # result = cv2.cvtColor(result, cv2.COLOR_HSV2RGB)
+            result = cv2.cvtColor(result, cv2.COLOR_HSV2RGB)
         return np.array(result, dtype='uint8')
     
     #Gaussian Filter
@@ -162,7 +163,7 @@ class AreaProcessing():
             for i in range(width-2*radius):
                 for j in range(height-2*radius):
                     result[i,j,2] = np.sum(np.multiply(image[i:i+size,j:j+size,2], kernel2d))
-            # result = cv2.cvtColor(result, cv2.COLOR_HSV2RGB)
+            result = cv2.cvtColor(result, cv2.COLOR_HSV2RGB)
         return np.array(result, dtype='uint8')
     
     #High-Boost Filter
@@ -177,26 +178,31 @@ class AreaProcessing():
         elif(highpass==8):
             kernel = -np.ones((size, size))
             kernel[radius, radius] = 8 + alpha
-
+        
         if(len(image.shape)==2):
             width, height = image.shape[0], image.shape[1]
             result = np.zeros((width-2*radius, height-2*radius))
             for i in range(width-2*radius):
                 for j in range(height-2*radius):
-                    result[i,j] = np.around(np.sum(np.multiply(image[i:i+size,j:j+size], kernel)))
+                    result[i,j] = np.sum(np.multiply(image[i:i+size,j:j+size], kernel))
         elif(len(image.shape)==3 and color_type=="RGB"):
             width, height, channel = image.shape[0], image.shape[1], image.shape[2]
-            result = np.zeros((width-2*radius, height-2*radius, channel))
+            # result = np.zeros((width-2*radius, height-2*radius, channel))
+            result = image[radius:width-radius+1, radius:height-radius+1, :].copy()
             for ch in range(channel):
                 for i in range(width-2*radius):
                     for j in range(height-2*radius):
-                        result[i,j,ch] = np.around(np.sum(np.multiply(image[i:i+size,j:j+size,ch], kernel)))
+                        result[i,j,ch] = np.sum(np.multiply(image[i:i+size,j:j+size,ch], kernel))
         elif(len(image.shape)==3 and color_type=="HSI"):
             width, height = image.shape[0], image.shape[1]
-            result = image[radius:width-radius+1, radius:height-radius+1, :]
+            result = image[radius:width-radius+1, radius:height-radius+1, :].copy()
             for i in range(width-2*radius):
                 for j in range(height-2*radius):
-                    result[i,j,2] = np.around(np.sum(np.multiply(image[i:i+size,j:j+size,2], kernel)))
-            # result = cv2.cvtColor(result, cv2.COLOR_HSV2RGB)
+                    result[i,j,2] = np.sum(np.multiply(image[i:i+size,j:j+size,2], kernel))
+            # for ch in range(channel):
+            #     for i in range(width-2*radius):
+            #         for j in range(height-2*radius):
+            #             result[i,j,ch] = np.sum(np.multiply(image[i:i+size,j:j+size,ch], kernel))
+            result = cv2.cvtColor(result, cv2.COLOR_HSV2RGB)
         return np.array(result, dtype='uint8')
     

@@ -6,6 +6,7 @@ from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk, Image
 from functools import partial
+import cv2
 
 #HE test
 hetest = ["Fig0316(1)(top_left).jpg","Fig0316(2)(2nd_from_top).jpg","Fig0316(3)(third_from_top).jpg","Fig0316(4)(bottom_left).jpg"]
@@ -34,11 +35,15 @@ def get_selected_image(scale):
         IMAGE_CV = GetImage().get_color_image_rgb(NAME)
         TYPE = "RGB"
     elif scale=="HSI":
-        IMAGE_CV = GetImage().get_color_image_rgb(NAME)
+        IMAGE_CV = GetImage().get_color_image_hsi(NAME)
         TYPE = "HSI"
     label1.config(text="\n[ "+NAME+" ] "+TYPE+" 이미지\n")
     label1.place(x=350, y=5)
-    IMAGE = Image.fromarray(IMAGE_CV)
+    if scale=="HSI":
+        IMAGE = cv2.cvtColor(IMAGE_CV, cv2.COLOR_HSV2RGB)
+        IMAGE = Image.fromarray(IMAGE)
+    else:
+        IMAGE = Image.fromarray(IMAGE_CV)
     IMAGE = ImageTk.PhotoImage(image=IMAGE)
     label2.config(image=IMAGE)
 def neg_trans():
