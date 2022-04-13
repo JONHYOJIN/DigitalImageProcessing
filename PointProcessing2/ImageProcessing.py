@@ -187,7 +187,6 @@ class AreaProcessing():
                     result[i,j] = np.sum(np.multiply(image[i:i+size,j:j+size], kernel))
         elif(len(image.shape)==3 and color_type=="RGB"):
             width, height, channel = image.shape[0], image.shape[1], image.shape[2]
-            # result = np.zeros((width-2*radius, height-2*radius, channel))
             result = image[radius:width-radius+1, radius:height-radius+1, :].copy()
             for ch in range(channel):
                 for i in range(width-2*radius):
@@ -199,10 +198,6 @@ class AreaProcessing():
             for i in range(width-2*radius):
                 for j in range(height-2*radius):
                     result[i,j,2] = np.sum(np.multiply(image[i:i+size,j:j+size,2], kernel))
-            # for ch in range(channel):
-            #     for i in range(width-2*radius):
-            #         for j in range(height-2*radius):
-            #             result[i,j,ch] = np.sum(np.multiply(image[i:i+size,j:j+size,ch], kernel))
             result = cv2.cvtColor(result, cv2.COLOR_HSV2RGB)
         return np.array(result, dtype='uint8')
     

@@ -57,8 +57,9 @@ def neg_trans():
         label2.config(image=IMAGE)
     except:
         label1.config(text="\n선택된 사진이 없습니다")
-def pow_law_trans(gamma):
+def pow_law_trans():
     global IMAGE, IMAGE_CV, NAME, TYPE
+    gamma = combobox_plT_var.get()
     try:
         label1.config(text="\n[ "+NAME+" ] "+TYPE+" Power-Law Transformation γ="+str(gamma)+"\n")
         label1.place(x=350, y=5)
@@ -81,8 +82,9 @@ def hist_equal():
         label1.config(text="\n선택된 사진이 없습니다")
         if(NAME):
             label1.config(text="\nRGB 사진은 지원되지 않습니다")
-def mean_ft(size):
+def mean_ft():
     global IMAGE, IMAGE_CV, NAME, TYPE
+    size = combobox_meanft_var.get()
     try:
         label1.config(text="\n[ "+NAME+" ] "+TYPE+" Mean Filter size="+str(size)+"x"+str(size)+"\n")
         label1.place(x=350, y=5)
@@ -92,8 +94,9 @@ def mean_ft(size):
         label2.config(image=IMAGE)
     except:
         label1.config(text="\n선택된 사진이 없습니다")
-def med_ft(size):
+def med_ft():
     global IMAGE, IMAGE_CV, NAME, TYPE
+    size = combobox_medianft_var.get()
     try:
         label1.config(text="\n[ "+NAME+" ] "+TYPE+" Median Filter size="+str(size)+"x"+str(size)+"\n")
         label1.place(x=350, y=5)
@@ -103,8 +106,10 @@ def med_ft(size):
         label2.config(image=IMAGE)
     except:
         label1.config(text="\n선택된 사진이 없습니다")
-def gaus_ft(size, sigma):
+def gaus_ft():
     global IMAGE, IMAGE_CV, NAME, TYPE
+    size = combobox_gausft_var_1.get()
+    sigma = combobox_gausft_var_2.get()
     try:
         label1.config(text="\n[ "+NAME+" ] "+TYPE+" Gaussian Filter size="+str(size)+"x"+str(size)+", σ="+str(sigma)+"\n")
         label1.place(x=350, y=5)
@@ -114,8 +119,10 @@ def gaus_ft(size, sigma):
         label2.config(image=IMAGE)
     except:
         label1.config(text="\n선택된 사진이 없습니다")
-def hb_ft(alpha, highpass):
+def hb_ft():
     global IMAGE, IMAGE_CV, NAME, TYPE
+    alpha = combobox_hbft_var_1.get()
+    highpass = combobox_hbft_var_2.get()
     try:
         label1.config(text="\n[ "+NAME+" ] "+TYPE+" High-Boost Filter size= 3x3, A="+str(alpha)+", HighPass Type:"+str(highpass)+"\n")
         label1.place(x=350, y=5)
@@ -151,51 +158,87 @@ button_select_image_hsi.place(x=220, y=70)
 
 #IMAGE Processing
 BX = 10
-PP = 120
-AP = 330
+PP = 150
+AP = 270
 STAIR = 30
 #Point Processing
 label4 = Label(root, text = "< Point Processing >")
 label4.place(x=BX+5, y=PP-20)
+##Negative Transformation
 button_p1 = Button(root, text = "Negative Trans.", command=neg_trans)
 button_p1.place(x=BX, y=PP)
-button_p2 = Button(root, text = "Power-Law Trans.(γ=0.4)", command=partial(pow_law_trans, 0.4))
+##Power-Law Transformation
+label_meanft = Label(root, text ="γ :")
+label_meanft.place(x=BX+150, y=PP+(1*STAIR))
+combobox_plT_var = DoubleVar()
+combobox_plT = ttk.Combobox(root, textvariable=combobox_plT_var, width=3)
+combobox_plT['value'] = ([0.4, 0.67, 1.5, 2.5])
+combobox_plT.place(x=BX+175, y=PP+(1*STAIR)+3)
+combobox_plT.set(0.4)
+button_p2 = Button(root, text = "Power-Law Trans.", command=pow_law_trans)
 button_p2.place(x=BX, y=PP+(1*STAIR))
-button_p3 = Button(root, text = "Power-Law Trans.(γ=0.67)", command=partial(pow_law_trans, 0.67))
+##Histogram Equalization
+button_p3 = Button(root, text = "Histogram Equal.", command=hist_equal)
 button_p3.place(x=BX, y=PP+(2*STAIR))
-button_p4 = Button(root, text = "Power-Law Trans.(γ=1.5)", command=partial(pow_law_trans, 1.5))
-button_p4.place(x=BX, y=PP+(3*STAIR))
-button_p5 = Button(root, text = "Power-Law Trans.(γ=2.5)", command=partial(pow_law_trans, 2.5))
-button_p5.place(x=BX, y=PP+(4*STAIR))
-button_p6 = Button(root, text = "Histogram Equal.", command=hist_equal)
-button_p6.place(x=BX, y=PP+(5*STAIR))
+
 #Area Processing
 label5 = Label(root, text = "< Area Processing >")
 label5.place(x=BX+5, y=AP-20)
-button_p7 = Button(root, text = "Mean Filter 3x3", command=partial(mean_ft, 3))
-button_p7.place(x=BX, y=AP)
-button_p8 = Button(root, text = "Mean Filter 5x5", command=partial(mean_ft, 5))
-button_p8.place(x=BX, y=AP+(1*STAIR))
-button_p9 = Button(root, text = "Median Filter 3x3", command=partial(med_ft, 3))
-button_p9.place(x=BX, y=AP+(2*STAIR))
-button_p10 = Button(root, text = "Median Filter 5x5", command=partial(med_ft, 5))
-button_p10.place(x=BX, y=AP+(3*STAIR))
-button_p11 = Button(root, text = "Gaussian Filter 3x3 (σ=1)", command=partial(gaus_ft, 3, 1))
-button_p11.place(x=BX, y=AP+(4*STAIR))
-button_p12 = Button(root, text = "Gaussian Filter 5x5 (σ=1)", command=partial(gaus_ft, 3, 1))
-button_p12.place(x=BX, y=AP+(5*STAIR))
-button_p13 = Button(root, text = "High-Boost Filter 3x3 (A=1.0, HP:4)", command=partial(hb_ft, 1, 4))
-button_p13.place(x=BX, y=AP+(6*STAIR))
-button_p14 = Button(root, text = "High-Boost Filter 3x3 (A=1.2, HP:4)", command=partial(hb_ft, 1.2, 4))
-button_p14.place(x=BX, y=AP+(7*STAIR))
-button_p15 = Button(root, text = "High-Boost Filter 3x3 (A=1.4, HP:4)", command=partial(hb_ft, 1.4, 4))
-button_p15.place(x=BX, y=AP+(8*STAIR))
-button_p16 = Button(root, text = "High-Boost Filter 3x3 (A=1.0, HP:8)", command=partial(hb_ft, 1, 8))
-button_p16.place(x=BX, y=AP+(9*STAIR))
-button_p17 = Button(root, text = "High-Boost Filter 3x3 (A=1.2, HP:8)", command=partial(hb_ft, 1.2, 8))
-button_p17.place(x=BX, y=AP+(10*STAIR))
-button_p18 = Button(root, text = "High-Boost Filter 3x3 (A=1.4, HP:8)", command=partial(hb_ft, 1.4, 8))
-button_p18.place(x=BX, y=AP+(11*STAIR))
+##Mean FILTER
+label_meanft = Label(root, text ="size :")
+label_meanft.place(x=BX+120, y=AP)
+combobox_meanft_var = IntVar()
+combobox_meanft = ttk.Combobox(root, textvariable=combobox_meanft_var, width=3)
+combobox_meanft['value'] = ([3, 5, 9, 15, 19])
+combobox_meanft.place(x=BX+160, y=AP+3)
+combobox_meanft.set(3)
+button_p4 = Button(root, text = "Mean Filter", command=mean_ft)
+button_p4.place(x=BX, y=AP)
+##Median FILTER
+label_medianft = Label(root, text ="size :")
+label_medianft.place(x=BX+120, y=AP+(1*STAIR))
+combobox_medianft_var = IntVar()
+combobox_medianft = ttk.Combobox(root, textvariable=combobox_medianft_var, width=3)
+combobox_medianft['value'] = ([3, 5, 9, 15, 19])
+combobox_medianft.place(x=BX+160, y=AP+(1*STAIR)+3)
+combobox_medianft.set(3)
+button_p5 = Button(root, text = "Median Filter", command=med_ft)
+button_p5.place(x=BX, y=AP+(1*STAIR))
+##Gaussian FILTER
+label_gausft_1 = Label(root, text ="size :")
+label_gausft_1.place(x=BX+130, y=AP+(2*STAIR))
+label_gausft_2 = Label(root, text ="σ :")
+label_gausft_2.place(x=BX+225, y=AP+(2*STAIR))
+combobox_gausft_var_1 = IntVar()
+combobox_gausft_1 = ttk.Combobox(root, textvariable=combobox_gausft_var_1, width=3)
+combobox_gausft_1['value'] = ([3, 5, 9, 15, 19])
+combobox_gausft_1.place(x=BX+170, y=AP+(2*STAIR)+3)
+combobox_gausft_1.set(3)
+combobox_gausft_var_2 = IntVar()
+combobox_gausft_2 = ttk.Combobox(root, textvariable=combobox_gausft_var_2, width=3)
+combobox_gausft_2['value'] = ([0.1, 0.5, 1, 5, 10])
+combobox_gausft_2.place(x=BX+250, y=AP+(2*STAIR)+3)
+combobox_gausft_2.set(1)
+button_p6 = Button(root, text = "Gaussian Filter", command=gaus_ft)
+button_p6.place(x=BX, y=AP+(2*STAIR))
+##HighBoost FILTER
+label_hbft_1 = Label(root, text ="A :")
+label_hbft_1.place(x=BX+135, y=AP+(3*STAIR))
+label_hbft_2 = Label(root, text ="HP :")
+label_hbft_2.place(x=BX+215, y=AP+(3*STAIR))
+combobox_hbft_var_1 = DoubleVar()
+combobox_hbft_1 = ttk.Combobox(root, textvariable=combobox_hbft_var_1, width=3)
+combobox_hbft_1['value'] = ([1.0, 1.2, 1.4])
+combobox_hbft_1.place(x=BX+160, y=AP+(3*STAIR)+3)
+combobox_hbft_1.set(1.0)
+combobox_hbft_var_2 = IntVar()
+combobox_hbft_2 = ttk.Combobox(root, textvariable=combobox_hbft_var_2, width=3)
+combobox_hbft_2['value'] = ([4, 8])
+combobox_hbft_2.place(x=BX+250, y=AP+(3*STAIR)+3)
+combobox_hbft_2.set(4)
+button_p7 = Button(root, text = "HighBoost Filter", command=hb_ft)
+button_p7.place(x=BX, y=AP+(3*STAIR))
+
 
 root.mainloop()
 
