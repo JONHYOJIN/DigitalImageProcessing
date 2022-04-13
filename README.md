@@ -10,10 +10,11 @@
 - Negative Transformation
 - Power-law Transformation(γ= 0.4, 0.67, 1.5, 2.5)
 - Histogram Equalization(for Gray-Scale Images)
-- Mean Filter(3x3, 5x5)
-- Median Filter(3x3, 5x5)
-- Gaussian Filter(3x3, 5x5, σ=1)
-- High-Boost Filter(3x3, A=1.0~1.2, HP:4,8)
+- Mean Filter
+- Median Filter
+- Gaussian Filter
+- High-Boost Filter(3x3)
 
-<img width="1401" alt="스크린샷 2022-04-06 오후 4 34 06" src="https://user-images.githubusercontent.com/82302700/161920940-0c2876e7-ed5e-48ea-9772-d2f3ff0e4652.png">
+<img width="1400" alt="스크린샷 2022-04-13 오후 4 39 17" src="https://user-images.githubusercontent.com/82302700/163125072-820701db-27d0-4419-be5b-82c8d9e4baaa.png">
+
 
