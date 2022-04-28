@@ -22,6 +22,6 @@
 - LoG Operator(Laplacian of Gaussian)
 - Canny Operator
 
-<img width="1400" alt="스크린샷 2022-04-13 오후 4 39 17" src="https://user-images.githubusercontent.com/82302700/163125072-820701db-27d0-4419-be5b-82c8d9e4baaa.png">
+<img width="1400" alt="스크린샷 2022-04-28 오후 8 11 54" src="https://user-images.githubusercontent.com/82302700/165740427-533ebd47-9b28-40ae-bafa-3776c0b3ed91.png">
 
 
