@@ -7,13 +7,20 @@
 - HW#3 images : Images for filtering
 
 ## Processing
+### Point Processing
 - Negative Transformation
 - Power-law Transformation(γ= 0.4, 0.67, 1.5, 2.5)
 - Histogram Equalization(for Gray-Scale Images)
+### Area Processing
 - Mean Filter
 - Median Filter
 - Gaussian Filter
 - High-Boost Filter(3x3)
+### Edge Detection
+- Prewitt Operator(3x3)
+- Sobel Operator(3x3)
+- LoG Operator(Laplacian of Gaussian)
+- Canny Operator
 
 <img width="1400" alt="스크린샷 2022-04-13 오후 4 39 17" src="https://user-images.githubusercontent.com/82302700/163125072-820701db-27d0-4419-be5b-82c8d9e4baaa.png">
 
