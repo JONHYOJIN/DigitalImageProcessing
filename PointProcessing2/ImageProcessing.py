@@ -318,10 +318,18 @@ class EdgeDetection():
 
     #LoG Operator
     def LoG_operator(self, image, size, sigma, color_type=None):
-        blur = cv2.GaussianBlur(image, (size, size), sigma)
-        result = cv2.Laplacian(blur, cv2.CV_8U, ksize=size)
+        if(len(image.shape)==3 and color_type=="HSI"):
+            blur = cv2.GaussianBlur(image[:,:,2], (size, size), sigma)
+            result = cv2.Laplacian(blur, cv2.CV_8U, ksize=size)
+        else:
+            blur = cv2.GaussianBlur(image, (size, size), sigma)
+            result = cv2.Laplacian(blur, cv2.CV_8U, ksize=size)
         return result
         
     #Canny Operator
     def canny_operator(self, image, min_threshold, max_threshold, color_type=None):
-        return cv2.Canny(image, min_threshold, max_threshold)
+        if(len(image.shape)==3 and color_type=="HSI"):
+            result = cv2.Canny(image[:,:,2], min_threshold, max_threshold)
+        else:
+            result = cv2.Canny(image, min_threshold, max_threshold)
+        return result

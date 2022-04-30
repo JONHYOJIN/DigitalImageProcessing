@@ -17,6 +17,11 @@ samplegs = ["boats.bmp","bridge.bmp","cameraman.bmp","clown.bmp","crowd.bmp","ma
 #Noise Images
 n_images = ["Gaussian noise.png","Lena_noise.png","Salt&pepper noise.png","Fig0327(a)(tungsten_original).jpg","Fig0525(a)(aerial_view_no_turb).jpg","Fig0503 (original_pattern).jpg","Fig0504(a)(gaussian-noise).jpg",\
     "Fig0504(i)(salt-pepper-noise).jpg","Fig0507(a)(ckt-board-orig).jpg","Fig0510(a)(ckt-board-saltpep-prob.pt05).jpg","Fig0513(a)(ckt_gaussian_var_1000_mean_0).jpg"]
+#도로교통공단 cctv capture images
+cctvs = ["대공원IC.png","청담대교북단.png","큰방죽사거리.png","벗말사거리.png","경부선_공세육교.png"]
+#오늘의집 책상 Images
+desks = ["책상1.png","책상2.png","책상3.png"]
+
 
 #Initialization
 root = Tk()
@@ -201,7 +206,7 @@ label3.place(x=15, y=5)
 
 combobox_p1_var = StringVar()
 combobox_p1 = ttk.Combobox(root, textvariable=combobox_p1_var)
-combobox_p1['value'] = (sum([hetest, samplegs, samplecs, n_images], []))
+combobox_p1['value'] = (sum([hetest, samplegs, samplecs, n_images, cctvs, desks], []))
 combobox_p1.place(x=10, y=25)
 
 button_select_image_gray = Button(root, text = "흑백 선택", command=partial(get_selected_image, "GRAY"), width=4, fg='grey20')
