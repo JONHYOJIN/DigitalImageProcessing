@@ -45,5 +45,39 @@ class GetImage():
         plt.ylabel("The number of pixels")
         plt.xlabel("Scale")
         plt.show()
+class GetVideo():
+    # def __init__(self):
+    def get_video_capture(self, filename):
+        address = "./실습동영상/" + filename
+        capture = cv2.VideoCapture(address)
+        return capture
+    def get_video_frame(self, capture):
+        run, frame = capture.read()
+        image = cv2.cvtColor(frame, cv2.IMREAD_COLOR)
+        return run, image
+    def get_video_frames(self, filename):
+        address = "./실습동영상/" + filename
+        capture = cv2.VideoCapture(address)
+        frames = []
+        while capture.isOpened():
+            run, frame = capture.read()
+            if not run:
+                break
+            img = cv2.cvtColor(frame, cv2.IMREAD_COLOR)
+            frames.append(img)
+        capture.release()
+        return np.array(frames, dtype='uint8')
 
+
+if __name__=='__main__':
+    frames = GetVideo().get_video_frames("예시1.avi")
+    for frame in frames:
+        cv2.imshow("Video1", frame)
+        if cv2.waitKey(30)&0xFF == ord('q'):
+            break
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    cv2.waitKey(1)
+    
+        
         

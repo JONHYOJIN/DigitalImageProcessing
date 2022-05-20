@@ -1,5 +1,5 @@
 # << Photoshop GUI >>
-from ImageRoad import GetImage
+from ImageRoad import GetImage, GetVideo
 from ImageProcessing import PointProcessing, AreaProcessing, EdgeDetection
 
 from tkinter import *
@@ -7,7 +7,9 @@ from tkinter import ttk
 from PIL import ImageTk, Image
 from functools import partial
 import cv2
+import time
 
+#<<IMAGE>>
 #HE test
 hetest = ["Fig0316(1)(top_left).jpg","Fig0316(2)(2nd_from_top).jpg","Fig0316(3)(third_from_top).jpg","Fig0316(4)(bottom_left).jpg"]
 #실습영상 Gray-Scale
@@ -21,6 +23,10 @@ n_images = ["Gaussian noise.png","Lena_noise.png","Salt&pepper noise.png","Fig03
 cctvs = ["대공원IC.png","청담대교북단.png","큰방죽사거리.png","벗말사거리.png","경부선_공세육교.png"]
 #오늘의집 책상 Images
 desks = ["책상1.png","책상2.png","책상3.png"]
+
+#<<VIDEO>>
+video_examples = ["example1.avi","example1.mp4","example1_small.mp4","earth.avi"]
+
 
 
 #Initialization
@@ -51,6 +57,24 @@ def get_selected_image(scale):
         IMAGE = Image.fromarray(IMAGE_CV)
     IMAGE = ImageTk.PhotoImage(image=IMAGE)
     label2.config(image=IMAGE)
+def get_selected_video():
+    global IMAGE, IMAGE_CV, NAME
+    NAME = combobox_v1_var.get() # 예시1.avi
+    # if scale=='AVI':
+    #     TYPE = 'AVI'
+    label1.config(text="\n[ "+NAME+" ]  비디오\n")
+    label1.place(x=350, y=5)
+    
+    frames = GetVideo().get_video_frames(NAME)
+    for frame in frames:
+        cv2.imshow(NAME, frame)
+        # IMAGE = Image.fromarray(frame)
+        # IMAGE = ImageTk.PhotoImage(image=IMAGE)
+        # label2.config(image=IMAGE)
+        if cv2.waitKey(30)&0xFF == ord('q'):
+            break
+    cv2.destroyAllWindows()
+    
 #Point Processing
 def neg_trans():
     global IMAGE, IMAGE_CV, NAME, TYPE
@@ -205,22 +229,32 @@ label3 = Label(root, text = "< IMAGE >")
 label3.place(x=15, y=5)
 
 combobox_p1_var = StringVar()
-combobox_p1 = ttk.Combobox(root, textvariable=combobox_p1_var)
+combobox_p1 = ttk.Combobox(root, textvariable=combobox_p1_var, width=21)
 combobox_p1['value'] = (sum([hetest, samplegs, samplecs, n_images, cctvs, desks], []))
 combobox_p1.place(x=10, y=25)
 
 button_select_image_gray = Button(root, text = "흑백 선택", command=partial(get_selected_image, "GRAY"), width=4, fg='grey20')
-button_select_image_gray.place(x=220, y=20)
+button_select_image_gray.place(x=8, y=50)
 button_select_image_rgb = Button(root, text = "RGB 선택", command=partial(get_selected_image, "RGB"), width=4, fg='brown4')
-button_select_image_rgb.place(x=220, y=45)
+button_select_image_rgb.place(x=78, y=50)
 button_select_image_hsi = Button(root, text = "HSI 선택", command=partial(get_selected_image, "HSI"), width=4, fg='steel blue')
-button_select_image_hsi.place(x=220, y=70)
+button_select_image_hsi.place(x=148, y=50)
+
+#Get Video
+label_v1 = Label(root, text = "< VIDEO >")
+label_v1.place(x=15, y=90)
+combobox_v1_var = StringVar()
+combobox_v1 = ttk.Combobox(root, textvariable=combobox_v1_var, width=21)
+combobox_v1['value'] = (sum([video_examples], []))
+combobox_v1.place(x=10, y=110)
+button_select_avi = Button(root, text = "Play", command=get_selected_video, width=4, fg='grey20')
+button_select_avi.place(x=8, y=135)
 
 #IMAGE Processing
 BX = 10     #Button 가로 위치(x) 기준
-PP = 150    #Point Processing 세로 위치 기준
-AP = 270    #Area Processing 세로 위치 기준
-ED = 420    #Edge Detection 세로 위치 기준
+PP = 220    #Point Processing 세로 위치 기준
+AP = 340    #Area Processing 세로 위치 기준
+ED = 490    #Edge Detection 세로 위치 기준
 STAIR = 30
 XOPTION = 145
 
