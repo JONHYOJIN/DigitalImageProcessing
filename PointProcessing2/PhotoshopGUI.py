@@ -1,6 +1,8 @@
 # << Photoshop GUI >>
+from numpy import dtype
 from ImageRoad import GetImage, GetVideo
 from ImageProcessing import PointProcessing, AreaProcessing, EdgeDetection
+import numpy as np
 
 from tkinter import *
 from tkinter import ttk
@@ -58,15 +60,16 @@ def get_selected_image(scale):
     IMAGE = ImageTk.PhotoImage(image=IMAGE)
     label2.config(image=IMAGE)
 def get_selected_video():
-    global IMAGE, IMAGE_CV, NAME
+    global IMAGE, IMAGE_CV, NAME, TYPE
     NAME = combobox_v1_var.get() # 예시1.avi
-    # if scale=='AVI':
-    #     TYPE = 'AVI'
+    TYPE = "VIDEO"
     label1.config(text="\n[ "+NAME+" ]  비디오\n")
     label1.place(x=350, y=5)
-    
-    frames = GetVideo().get_video_frames(NAME)
-    for frame in frames:
+    IMAGE_CV = GetVideo().get_video_frames(NAME)
+
+def play_selected_video():
+    global IMAGE, IMAGE_CV, NAME
+    for frame in IMAGE_CV:
         cv2.imshow(NAME, frame)
         # IMAGE = Image.fromarray(frame)
         # IMAGE = ImageTk.PhotoImage(image=IMAGE)
@@ -142,12 +145,20 @@ def gaus_ft():
     size = combobox_gausft_var_1.get()
     sigma = combobox_gausft_var_2.get()
     try:
-        label1.config(text="\n[ "+NAME+" ] "+TYPE+" Gaussian Filter size="+str(size)+"x"+str(size)+", σ="+str(sigma)+"\n")
-        label1.place(x=350, y=5)
-        IMAGE_CV = AreaProcessing().gaussian_filter(IMAGE_CV, size, sigma, TYPE)
-        IMAGE = Image.fromarray(IMAGE_CV)
-        IMAGE = ImageTk.PhotoImage(image=IMAGE)
-        label2.config(image=IMAGE)
+        if(len(IMAGE_CV.shape)<4):
+            label1.config(text="\n[ "+NAME+" ] "+TYPE+" Gaussian Filter size="+str(size)+"x"+str(size)+", σ="+str(sigma)+"\n")
+            label1.place(x=350, y=5)
+            IMAGE_CV = AreaProcessing().gaussian_filter(IMAGE_CV, size, sigma, TYPE)
+            IMAGE = Image.fromarray(IMAGE_CV)
+            IMAGE = ImageTk.PhotoImage(image=IMAGE)
+            label2.config(image=IMAGE)
+        elif(len(IMAGE_CV.shape)==4):
+            label1.config(text="\n[ "+NAME+" ] "+TYPE+" Gaussian Filter size="+str(size)+"x"+str(size)+", σ="+str(sigma)+"\n")
+            label1.place(x=350, y=5)
+            new_frames = []
+            for i in range(IMAGE_CV.shape[0]):
+                new_frames.append(cv2.GaussianBlur(IMAGE_CV[i], (size, size), sigma))
+            IMAGE_CV = np.array(new_frames, dtype='uint8')
     except:
         label1.config(text="\n선택된 사진이 없습니다")
 def hb_ft():
@@ -155,12 +166,20 @@ def hb_ft():
     alpha = combobox_hbft_var_1.get()
     highpass = combobox_hbft_var_2.get()
     try:
-        label1.config(text="\n[ "+NAME+" ] "+TYPE+" High-Boost Filter size= 3x3, A="+str(alpha)+", HighPass Type:"+str(highpass)+"\n")
-        label1.place(x=350, y=5)
-        IMAGE_CV = AreaProcessing().highboost_filter(IMAGE_CV, alpha, highpass, TYPE)
-        IMAGE = Image.fromarray(IMAGE_CV)
-        IMAGE = ImageTk.PhotoImage(image=IMAGE)
-        label2.config(image=IMAGE)
+        if(len(IMAGE_CV.shape)<4):
+            label1.config(text="\n[ "+NAME+" ] "+TYPE+" High-Boost Filter size= 3x3, A="+str(alpha)+", HighPass Type:"+str(highpass)+"\n")
+            label1.place(x=350, y=5)
+            IMAGE_CV = AreaProcessing().highboost_filter(IMAGE_CV, alpha, highpass, TYPE)
+            IMAGE = Image.fromarray(IMAGE_CV)
+            IMAGE = ImageTk.PhotoImage(image=IMAGE)
+            label2.config(image=IMAGE)
+        elif(len(IMAGE_CV.shape)==4):
+            label1.config(text="\n[ "+NAME+" ] "+TYPE+" High-Boost Filter size= 3x3, A="+str(alpha)+", HighPass Type:"+str(highpass)+"\n")
+            label1.place(x=350, y=5)
+            new_frames = []
+            for i in range(IMAGE_CV.shape[0]):
+                new_frames.append(cv2.addWeighted(IMAGE_CV[i], -2, cv2.GaussianBlur(IMAGE_CV[i],(3,3),0.01), highpass+alpha, 0))
+            IMAGE_CV = np.array(new_frames, dtype='uint8')
     except:
         label1.config(text="\n선택된 사진이 없습니다")
 #Edge Detection
@@ -247,8 +266,10 @@ combobox_v1_var = StringVar()
 combobox_v1 = ttk.Combobox(root, textvariable=combobox_v1_var, width=21)
 combobox_v1['value'] = (sum([video_examples], []))
 combobox_v1.place(x=10, y=110)
-button_select_avi = Button(root, text = "Play", command=get_selected_video, width=4, fg='grey20')
+button_select_avi = Button(root, text = "Select", command=get_selected_video, width=4, fg='grey20')
 button_select_avi.place(x=8, y=135)
+button_select_avi = Button(root, text = "Play", command=play_selected_video, width=4, fg='grey20')
+button_select_avi.place(x=78, y=135)
 
 #IMAGE Processing
 BX = 10     #Button 가로 위치(x) 기준
