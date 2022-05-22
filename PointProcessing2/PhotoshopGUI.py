@@ -1,7 +1,7 @@
 # << Photoshop GUI >>
 from numpy import dtype
 from ImageRoad import GetImage, GetVideo
-from ImageProcessing import PointProcessing, AreaProcessing, EdgeDetection
+from ImageProcessing import PointProcessing, AreaProcessing, EdgeDetection, FrameProcessing
 import numpy as np
 
 from tkinter import *
@@ -235,6 +235,32 @@ def canny():
         label2.config(image=IMAGE)
     except:
         label1.config(text="\n선택된 사진이 없습니다")
+#Frame Processing
+def three_s_s():
+    global IMAGE, IMAGE_CV, NAME, TYPE
+    try:
+        label1.config(text="\n[ "+NAME+" ] "+TYPE+" 3-Step Search\n")
+        label1.place(x=350, y=5)
+        IMAGE_CV = FrameProcessing().three_step_search(IMAGE_CV)
+    except:
+        label1.config(text="\n선택된 동영상이 없습니다")
+
+def lucas_kanade_optical_flow():
+    global IMAGE, IMAGE_CV, NAME, TYPE
+    try:
+        label1.config(text="\n[ "+NAME+" ] "+TYPE+" Lucas Kanade\n")
+        label1.place(x=350, y=5)
+        IMAGE_CV = FrameProcessing().lucas_kanade(IMAGE_CV)
+    except:
+        label1.config(text="\n선택된 동영상이 없습니다")
+def gunar_farneback_optical_flow():
+    global IMAGE, IMAGE_CV, NAME, TYPE
+    try:
+        label1.config(text="\n[ "+NAME+" ] "+TYPE+" Gunar Farneback\n")
+        label1.place(x=350, y=5)
+        IMAGE_CV = FrameProcessing().gunar_farneback(IMAGE_CV)
+    except:
+        label1.config(text="\n선택된 동영상이 없습니다")
 ### End of Funtions ###
 
 #User Interface
@@ -276,6 +302,7 @@ BX = 10     #Button 가로 위치(x) 기준
 PP = 220    #Point Processing 세로 위치 기준
 AP = 340    #Area Processing 세로 위치 기준
 ED = 490    #Edge Detection 세로 위치 기준
+FP = 640    #Frame Processing 세로 위치 기준
 STAIR = 30
 XOPTION = 145
 
@@ -428,6 +455,20 @@ combobox_canny_2.place(x=XOPTION+98, y=ED+(3*STAIR)+3)
 combobox_canny_2.set(250)
 button_p11 = Button(root, text = "Canny Operator", command=canny, width =11)
 button_p11.place(x=BX, y=ED+(3*STAIR))
+
+#[FrameProcessing]
+label6 = Label(root, text = "< Frame Processing >")
+label6.place(x=BX+5, y=FP-20)
+#Three step search
+button_p12 = Button(root, text = "3-Step Search", command=three_s_s, width =11)
+button_p12.place(x=BX, y=FP)
+#Lucas Kanade
+button_p9 = Button(root, text = "Lacas Kanade", command=lucas_kanade_optical_flow, width =11)
+button_p9.place(x=BX, y=FP+(1*STAIR))
+#Gunar Farneback
+button_p9 = Button(root, text = "Gunar Farneback", command=gunar_farneback_optical_flow, width =11)
+button_p9.place(x=BX, y=FP+(2*STAIR))
+
 
 
 

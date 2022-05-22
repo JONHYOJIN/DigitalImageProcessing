@@ -47,14 +47,6 @@ class GetImage():
         plt.show()
 class GetVideo():
     # def __init__(self):
-    def get_video_capture(self, filename):
-        address = "./실습동영상/" + filename
-        capture = cv2.VideoCapture(address)
-        return capture
-    def get_video_frame(self, capture):
-        run, frame = capture.read()
-        image = cv2.cvtColor(frame, cv2.IMREAD_COLOR)
-        return run, image
     def get_video_frames(self, filename):
         address = "./실습동영상/" + filename
         capture = cv2.VideoCapture(address)
