@@ -26,7 +26,8 @@
 - Three-Step Search
 - Lucas Kanade
 - Gunar Farneback
+- 
+<img width="1400" alt="스크린샷 2022-05-26 오후 12 34 08" src="https://user-images.githubusercontent.com/82302700/170411233-6b8fa457-062a-42fd-85ca-a1d16ceb0782.png">
 
-<img width="1400" alt="스크린샷 2022-04-28 오후 8 11 54" src="https://user-images.githubusercontent.com/82302700/165740427-533ebd47-9b28-40ae-bafa-3776c0b3ed91.png">
 
 
