@@ -9,7 +9,6 @@ from tkinter import ttk
 from PIL import ImageTk, Image
 from functools import partial
 import cv2
-import time
 
 #<<IMAGE>>
 #HE test

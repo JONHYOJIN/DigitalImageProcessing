@@ -337,13 +337,13 @@ class FrameProcessing():
     # def __init__():
 
 
-    def find_lowest_point(self, prev, next, x, y, radius):
-        min_x, min_y = x, y
+    def find_lowest_point(self, prev, next, x, y, w, z, radius):
+        min_x, min_y = w, z
         try:
-            residual = np.sum(np.multiply(next[x, y]-prev[x,y],next[x, y]-prev[x,y]))
-            for (cx, cy) in [(x-radius, y+radius),(x, y+radius),(x+radius, y+radius),(x-radius, y),(x+radius, y),(x-radius, y-radius),(x, y-radius),(x+radius, y-radius)]:
+            residual = np.sum(np.multiply(next[min_x-1:min_x+2, min_y-1:min_y+2]-prev[x-1:x+2, y-1:y+2],next[min_x-1:min_x+2, min_y-1:min_y+2]-prev[x-1:x+2, y-1:y+2]))
+            for (cx, cy) in [(w-radius, z+radius),(w, z+radius),(w+radius, z+radius),(w-radius, y),(z+radius, y),(w-radius, z-radius),(w, z-radius),(w+radius, z-radius)]:
                 try:
-                    new_residual = np.sum(np.multiply(next[cx, cy]-prev[x,y],next[cx, cy]-prev[x,y]))
+                    new_residual = np.sum(np.multiply(next[cx-1:cx+2, cy-1:cy+2]-prev[x-1:x+2, y-1:y+2],next[cx-1:cx+2, cy-1:cy+2]-prev[x-1:x+2, y-1:y+2]))
                     if new_residual < residual:
                         min_x, min_y = cx, cy
                         residual = new_residual
@@ -354,8 +354,7 @@ class FrameProcessing():
         return min_x, min_y
     
     #3-Step Search
-    def three_step_search(self, frames, radius=8):
-        # 추적 경로를 그리기 위한 랜덤 색상
+    def three_step_search(self, frames, radius=4):
         color = np.random.randint(0,255,(200,3))
         lines = None  #추적 선을 그릴 이미지 저장 변수
         prev = None  # 이전 프레임 저장 변수
@@ -368,28 +367,27 @@ class FrameProcessing():
                 prev = gray
                 # 추적선 그릴 이미지를 프레임 크기에 맞게 생성
                 lines = np.zeros_like(frames[i])
-                # 추적 시작을 위한 코너 검출  ---①
+                # 추적 시작을 위한 코너 검출
                 prevPt = cv2.goodFeaturesToTrack(prev, 200, 0.01, 10)
             else:
                 next = gray
                 for j, point in enumerate(prevPt):
-                    a, b = int(point[0][0]), int(point[0][1])
-                    c, d = self.find_lowest_point(prev, next, a, b, radius)
-                    c, d = self.find_lowest_point(prev, next, c, d, radius/2)
-                    c, d = self.find_lowest_point(prev, next, c, d, radius/4)
+                    a, b = int(point[0, 0].copy()), int(point[0, 1].copy())
+                    c, d = self.find_lowest_point(prev, next, a, b, a, b, radius)
+                    c, d = self.find_lowest_point(prev, next, a, b, c, d, int(radius/2))
+                    c, d = self.find_lowest_point(prev, next, a, b, c, d, int(radius/4))
                     try:
-                        # 이전 코너와 새로운 코너에 선그리기 ---④
+                        # 이전 코너와 새로운 코너에 선그리기
                         cv2.line(lines, (int(a), int(b)), (int(c),int(d)), color[i].tolist(), 2)
                         # 새로운 코너에 점 그리기
                         cv2.circle(img_draw, (int(c),int(d)), 2, color[i].tolist(), -1)
                     except:
                         pass
-                    prevPt[j][0][0], prevPt[j][0][1] = c, d
-                # 누적된 추적 선을 출력 이미지에 합성 ---⑤
+                    prevPt[j, 0, 0], prevPt[j, 0, 1] = c, d
+                # 누적된 추적 선을 출력 이미지에 합성
                 img_draw = cv2.add(img_draw, lines)
-                # 다음 프레임을 위한 프레임과 코너점 이월
                 prev = next
-                new_frames.append(img_draw)
+            new_frames.append(img_draw)
         return np.array(new_frames, dtype='uint8')
     #Lucas_kanade
     def lucas_kanade(self, frames):
