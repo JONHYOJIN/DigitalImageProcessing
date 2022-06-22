@@ -30,7 +30,7 @@
 - Hand Detection
 - Vehicle Detection
 
-<img width="1400" alt="스크린샷 2022-05-26 오후 12 34 08" src="https://user-images.githubusercontent.com/82302700/170411233-6b8fa457-062a-42fd-85ca-a1d16ceb0782.png">
+<img width="1399" alt="스크린샷 2022-06-22 오후 11 44 54" src="https://user-images.githubusercontent.com/82302700/175058658-22e0129b-1d18-44c9-86d5-de72528dafbf.png">
 
 
 
