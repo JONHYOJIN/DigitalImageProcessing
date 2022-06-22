@@ -1,7 +1,7 @@
 # << Photoshop GUI >>
 from numpy import dtype
 from ImageRoad import GetImage, GetVideo
-from ImageProcessing import PointProcessing, AreaProcessing, EdgeDetection, FrameProcessing
+from ImageProcessing import PointProcessing, AreaProcessing, EdgeDetection, FrameProcessing, ObjectDetection
 import numpy as np
 
 from tkinter import *
@@ -9,6 +9,7 @@ from tkinter import ttk
 from PIL import ImageTk, Image
 from functools import partial
 import cv2
+import time
 
 #<<IMAGE>>
 #HE test
@@ -26,7 +27,7 @@ cctvs = ["대공원IC.png","청담대교북단.png","큰방죽사거리.png","�
 desks = ["책상1.png","책상2.png","책상3.png"]
 
 #<<VIDEO>>
-video_examples = ["example1.avi","example1.mp4","example1_small.mp4","earth.avi"]
+video_examples = ["example1.avi","example1.mp4","example1_small.mp4","earth.avi","Hand Video2.mov","Project_outdoor video1.mov"]
 
 
 
@@ -70,9 +71,7 @@ def play_selected_video():
     global IMAGE, IMAGE_CV, NAME
     for frame in IMAGE_CV:
         cv2.imshow(NAME, frame)
-        # IMAGE = Image.fromarray(frame)
-        # IMAGE = ImageTk.PhotoImage(image=IMAGE)
-        # label2.config(image=IMAGE)
+        # time.sleep(0.3)
         if cv2.waitKey(30)&0xFF == ord('q'):
             break
     cv2.destroyAllWindows()
@@ -260,10 +259,30 @@ def gunar_farneback_optical_flow():
         IMAGE_CV = FrameProcessing().gunar_farneback(IMAGE_CV)
     except:
         label1.config(text="\n선택된 동영상이 없습니다")
+#Object Detection
+def hand_detect():
+    global IMAGE, IMAGE_CV, NAME, TYPE
+    try:
+        label1.config(text="\n[ "+NAME+" ] "+TYPE+" Object Detection (Hand)\n")
+        label1.place(x=350, y=5)
+        IMAGE_CV = ObjectDetection().hand_detection(IMAGE_CV)
+    except:
+        label1.config(text="\n선택된 동영상이 없습니다")
+def vehicle_detect():
+    global IMAGE, IMAGE_CV, NAME, TYPE
+    try:
+        label1.config(text="\n[ "+NAME+" ] "+TYPE+" Object Detection (Vehicle)\n")
+        label1.place(x=350, y=5)
+        IMAGE_CV = ObjectDetection().vehicle_detection(IMAGE_CV)
+    except:
+        label1.config(text="\n선택된 동영상이 없습니다")
+
+
+
 ### End of Funtions ###
 
 #User Interface
-label1 = Label(root, text = "\n편집할 사진을 선택해주세요")
+label1 = Label(root, text = "\n편집할 사진이나 동영상을 선택해주세요")
 label1.place(x=500, y=300)
 label2 = Label(root, text = " ")
 label2.place(x=350, y=50)
@@ -302,6 +321,7 @@ PP = 220    #Point Processing 세로 위치 기준
 AP = 340    #Area Processing 세로 위치 기준
 ED = 490    #Edge Detection 세로 위치 기준
 FP = 640    #Frame Processing 세로 위치 기준
+OB = 760    #Object Detection 세로 위치 기준
 STAIR = 30
 XOPTION = 145
 
@@ -462,15 +482,21 @@ label6.place(x=BX+5, y=FP-20)
 button_p12 = Button(root, text = "3-Step Search", command=three_s_s, width =11)
 button_p12.place(x=BX, y=FP)
 #Lucas Kanade
-button_p9 = Button(root, text = "Lacas Kanade", command=lucas_kanade_optical_flow, width =11)
-button_p9.place(x=BX, y=FP+(1*STAIR))
+button_p13 = Button(root, text = "Lacas Kanade", command=lucas_kanade_optical_flow, width =11)
+button_p13.place(x=BX, y=FP+(1*STAIR))
 #Gunar Farneback
-button_p9 = Button(root, text = "Gunar Farneback", command=gunar_farneback_optical_flow, width =11)
-button_p9.place(x=BX, y=FP+(2*STAIR))
+button_p14 = Button(root, text = "Gunar Farneback", command=gunar_farneback_optical_flow, width =11)
+button_p14.place(x=BX, y=FP+(2*STAIR))
 
-
-
-
+#[ObjectDetection]
+label7 = Label(root, text = "< Object Detection >")
+label7.place(x=BX+5, y=OB-20)
+#Hand Detection
+button_p15 = Button(root, text = "Hand Detection", command=hand_detect, width =11)
+button_p15.place(x=BX, y=OB)
+#Vehicle Detection
+button_p15 = Button(root, text = "Vehicle Detection", command=vehicle_detect, width =11)
+button_p15.place(x=BX, y=OB+(1*STAIR))
 
 root.mainloop()
 

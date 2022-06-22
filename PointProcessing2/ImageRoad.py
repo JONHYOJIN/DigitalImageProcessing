@@ -46,7 +46,6 @@ class GetImage():
         plt.xlabel("Scale")
         plt.show()
 class GetVideo():
-    # def __init__(self):
     def get_video_frames(self, filename):
         address = "./실습동영상/" + filename
         capture = cv2.VideoCapture(address)
