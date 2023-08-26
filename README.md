@@ -3,7 +3,7 @@
 
 ## 사용 방법
 - Photoshop Program 실행: Photoshop/PhotoshopGUI.py 실행
-- Processing Funstions 수정: Photoshop/ImageProcessing.py 코드 수정
+- Processing Functions 수정: Photoshop/ImageProcessing.py 코드 수정
 
 ## 사용한 이미지 및 동영상
 - HE test: Gray-Scale Images
