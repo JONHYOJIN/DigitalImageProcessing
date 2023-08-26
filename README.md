@@ -1,11 +1,15 @@
 # DigitalImageProcessing
-3학년 1학기 디지털영상처리 Photoshop
+디지털영상처리 수업 Photoshop 프로그램
+
+## 사용 방법
+- Photoshop Program 실행: Photoshop/PhotoshopGUI.py 실행
+- Processing Funstions 수정: Photoshop/ImageProcessing.py 코드 수정
 
 ## 사용한 이미지 및 동영상
-- HE test : Gray-Scale Images
-- 실습영상 : Color-Scale & Gray-Scale Images
-- HW#3 images : Images for filtering
-- 실습동영상 : Color-Scale Videos
+- HE test: Gray-Scale Images
+- 실습영상: Color-Scale & Gray-Scale Images
+- HW#3 images: Images for Filtering
+- 실습동영상: Color-Scale Videos
 
 ## Processing
 ### Point Processing
